@@ -1,25 +1,224 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download JetX Time Signals</title>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #0f172a; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; }
-        .container { background-color: #1e293b; padding: 40px; border-radius: 12px; max-width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-        h1 { color: #3b82f6; margin-bottom: 10px; }
-        p { color: #cbd5e1; margin-bottom: 30px; }
-        .download-btn { background-color: #22c55e; color: #fff; font-weight: bold; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 18px; transition: background-color 0.2s; }
-        .download-btn:hover { background-color: #16a34a; }
-        .notice { font-size: 12px; margin-top: 30px; color: #facc15; }
-    </style>
+        <html lang="sw">
+        <head>
+        <meta charset="UTF-8">
+        <title>JetX Time Signals</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#0f172a;color:#fff;text-align:center}
+.container{padding:15px}
+h1{margin-bottom:10px;cursor:pointer}
+.sub-box{background:#1e293b;padding:15px;border-radius:12px;margin:12px 0}
+input,button{width:100%;padding:12px;border-radius:8px;border:none;font-size:16px;margin-top:10px}
+.verify{background:#22c55e;color:#000;font-weight:bold}
+#contactAdmin{background:#25D366;color:#fff;font-weight:bold;margin-top:12px}
+#errorMsg{color:#f87171;margin-top:10px}
+#app{display:none;padding-top:30px;}
+#nextBtn{background:#3b82f6;color:#fff;font-weight:bold;margin-top:12px;padding:10px}
+#howToUseBtn{background:#64748b;color:#fff;font-weight:bold;margin-top:10px;padding:8px;}
+.odds{display:flex;gap:10px;margin:15px 0}
+.odds div{flex:1;padding:15px;border-radius:10px;font-size:20px;font-weight:bold}
+.blue{background:#2563eb}
+.green{background:#16a34a}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:50px;}
+.signal{padding:10px;border-radius:8px;font-weight:bold}
+.notice{font-size:12px;margin-top:10px;color:#facc15}
+#adminPanel{display:none;background:#111827;padding:15px;border-radius:12px;margin-top:20px}
+.admin-btn{background:#f97316;color:#fff;font-weight:bold}
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>JetX Time Signals</h1>
-        <p>The number one loved, believed, and accurate platform for JetX time signals.</p>
-        <a href="app-release.apk" class="download-btn">Download App</a>
-        <p class="notice">Note: You may need to enable "Install from unknown sources" in your phone's settings to install the app.</p>
-    </div>
+<div class="container">
+
+<!-- SUBSCRIPTION -->
+<div id="subscription">
+  <h1 id="titleSub">JetX Time Signals</h1>
+
+        <div class="sub-box">
+<b>Weekly – 4000 TSH</b><br>
+    Lipa: <b>22522526 (TIGO)</b><br>
+Jina: <b>Anton Samwel</b>
+  </div>
+
+<div class="sub-box">
+<b>Monthly – 10000 TSH</b><br>
+    Lipa: <b>22522526 (TIGO)</b><br>
+Jina: <b>Anton Samwel</b>
+  </div>
+
+<input id="c" placeholder="Weka Subscription Code">
+<button class="verify" onclick="_v()">VERIFY CODE</button>
+  <div id="errorMsg"></div>
+
+<!-- CONTACT ADMIN BUTTON -->
+<button id="contactAdmin" onclick="_contactAdmin()">
+Contact Admin via WhatsApp
+</button>
+</div>
+
+<!-- APP -->
+<div id="app">
+<h1 id="titleApp">JetX Signals</h1>
+
+  <button id="nextBtn" onclick="_g()">NEXT SIGNALS</button>
+  <button id="howToUseBtn" onclick="Android.openHowToUse()">How to Use</button>
+
+<div class="odds">
+<div class="blue" id="l">2.00</div>
+    <div class="green" id="h">5.01</div>
+</div>
+
+  <div class="grid" id="s"></div>
+<div class="notice">Sekunde zinaweza kudelay hadi kwa sekunde 15+ au 15-</div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+<h2>Admin Panel</h2>
+  <div id="adminContent">
+    <button class="admin-btn" onclick="_w()">Generate Weekly</button>
+<button class="admin-btn" onclick="_m()" style="margin-top:10px">Generate Monthly</button>
+    <p id="o" style="margin-top:10px;color:#22c55e;font-weight:bold"></p>
+</div>
+</div>
+
+</div>
+
+<script>
+(function(){
+  const P="2022";
+  const EXP_KEY="jetx_expiry";
+
+  let unlocked=false;
+
+  window.onload=function(){
+    let exp=localStorage.getItem(EXP_KEY);
+    if(exp && Date.now()<parseInt(exp)){
+      subscription.style.display="none";
+      app.style.display="block";
+      _g();
+    }else{
+      localStorage.removeItem(EXP_KEY);
+    }
+  }
+
+  window._v=function(){
+    let code=c.value.trim();
+
+    if(code.startsWith("JETX-W7")){
+      let expiry=Date.now()+ (7*24*60*60*1000);
+      localStorage.setItem(EXP_KEY,expiry);
+    }
+    else if(code.startsWith("JETX-M30")){
+      let expiry=Date.now()+ (30*24*60*60*1000);
+      localStorage.setItem(EXP_KEY,expiry);
+    }
+    else{
+      errorMsg.innerText="Invalid subscription code";
+      return;
+    }
+
+    subscription.style.display="none";
+    app.style.display="block";
+    _g();
+  }
+
+  const biasedRandom = (min, max, bias, influence) => {
+      let rnd = Math.random() * (max - min) + min, // random in range
+          mix = Math.random() * influence; // random mixer
+      return rnd * (1 - mix) + bias * mix;
+  };
+
+  const t=()=>`${String(new Date().getHours()).padStart(2,"0")}:${Math.random()*60|0}:${Math.random()*60|0}`;
+
+  window._g=function(){
+    s.innerHTML="";
+
+    // Blue odds (2.00 - 4.99), biased towards 2.00-3.50
+    l.innerText = biasedRandom(2.00, 4.99, 2.75, 0.7).toFixed(2);
+
+    // Green odds (5.00 - 9.50), biased towards 5.00-6.50
+    h.innerText = biasedRandom(5.00, 9.50, 5.75, 0.7).toFixed(2);
+
+    for(let i=0;i<16;i++){
+      let d=document.createElement("div");
+      // 70% chance of blue, 30% chance of green
+      d.className="signal "+(Math.random() < 0.7 ?"blue":"green");
+      d.innerText=t();
+      s.appendChild(d);
+    }
+  }
+
+  let clickCount=0, timer=null;
+
+  titleApp.addEventListener("click",()=>{
+    clickCount++;
+    if(clickCount===1) timer=setTimeout(()=>clickCount=0,2000);
+
+    if(clickCount===3){
+      clearTimeout(timer);
+      clickCount=0;
+
+      if(!unlocked){
+        let p=prompt("Weka Admin Secret Code");
+        if(p===P){
+          unlocked=true;
+          adminPanel.style.display="block";
+        }else{
+          alert("Wrong admin code");
+        }
+      }else{
+        adminPanel.style.display="none";
+        unlocked=false;
+      }
+    }
+  });
+
+  let subClick=0, subTimer=null;
+
+  titleSub.addEventListener("click",()=>{
+    subClick++;
+    if(subClick===1) subTimer=setTimeout(()=>subClick=0,2500);
+
+    if(subClick===5){
+      clearTimeout(subTimer);
+      subClick=0;
+
+      if(!unlocked){
+        let p=prompt("Weka Admin Secret Code");
+        if(p===P){
+          unlocked=true;
+          adminPanel.style.display="block";
+        }else{
+          alert("Wrong admin code");
+        }
+      }else{
+        adminPanel.style.display="none";
+        unlocked=false;
+      }
+    }
+  });
+
+  window._w=function(){
+    let c="JETX-W7-"+(1000+Math.random()*9000|0);
+    o.innerText="Weekly: "+c;
+  }
+
+  window._m=function(){
+    let c="JETX-M30-"+(1000+Math.random()*9000|0);
+    o.innerText="Monthly: "+c;
+  }
+
+  window._contactAdmin=function(){
+    let msg = encodeURIComponent("Hi, nimefanya payment, tafadhali nitumie subscription code.");
+    let phone = "255611025037";
+    let url = "https://wa.me/"+phone+"?text="+msg;
+window.open(url, "_blank");
+}
+
+})();
+</script>
+
 </body>
 </html>
