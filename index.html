@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body{margin:0;font-family:Arial,sans-serif;background:#0f172a;color:#fff;text-align:center}
-.container{padding:15px}
+.container{padding:15px; max-width: 600px; margin: auto;}
 h1{margin-bottom:10px;cursor:pointer}
 .sub-box{background:#1e293b;padding:15px;border-radius:12px;margin:12px 0}
 input,button{width:100%;padding:12px;border-radius:8px;border:none;font-size:16px;margin-top:10px}
@@ -90,10 +90,11 @@ Contact Admin via WhatsApp
 <script>
 (function(){
   const P="VIRGOSEVA";
-  const EXP_KEY="jetx_expiry_v2"; // Changed key to invalidate old subscriptions
+  const EXP_KEY="jetx_expiry_v2";
   let unlocked=false;
   let isGenerating = false;
   let blurInterval = null;
+  let validCodes = [];
 
   window.onload=function(){
     let exp=localStorage.getItem(EXP_KEY);
@@ -108,19 +109,24 @@ Contact Admin via WhatsApp
 
   window._v=function(){
     let code=c.value.trim();
-    if(code.startsWith("JETX-W7")){
-      let expiry=Date.now()+ (7*24*60*60*1000);
-      localStorage.setItem(EXP_KEY,expiry);
-    } else if(code.startsWith("JETX-M30")){
-      let expiry=Date.now()+ (30*24*60*60*1000);
-      localStorage.setItem(EXP_KEY,expiry);
+    const codeIndex = validCodes.indexOf(code);
+
+    if (codeIndex > -1) {
+      if (code.startsWith("JETX-W7")) {
+          let expiry = Date.now() + (7*24*60*60*1000);
+          localStorage.setItem(EXP_KEY, expiry);
+      } else if (code.startsWith("JETX-M30")) {
+          let expiry = Date.now() + (30*24*60*60*1000);
+          localStorage.setItem(EXP_KEY, expiry);
+      }
+      validCodes.splice(codeIndex, 1); // Use up the code
+      subscription.style.display="none";
+      app.style.display="block";
+      _g();
     } else {
-      errorMsg.innerText="Invalid subscription code";
+      errorMsg.innerText="Invalid or already used subscription code";
       return;
     }
-    subscription.style.display="none";
-    app.style.display="block";
-    _g();
   }
 
   const biasedRandom = (min, max, bias, influence) => {
@@ -147,10 +153,9 @@ Contact Admin via WhatsApp
   }
 
   window._g = function() {
-    if (isGenerating) return; // Prevent multiple clicks
+    if (isGenerating) return;
     isGenerating = true;
     s.innerHTML = "";
-
     if (blurInterval) clearInterval(blurInterval);
 
     const lowOdd = biasedRandom(2.00, 4.99, 2.75, 0.7);
@@ -182,7 +187,7 @@ Contact Admin via WhatsApp
             s.appendChild(d);
 
             if (i === signals.length - 1) {
-                isGenerating = false; // Re-enable button after last signal
+                isGenerating = false;
             }
         }, i * 100);
     });
@@ -252,11 +257,13 @@ Contact Admin via WhatsApp
   window._w=function(){
     let c="JETX-W7-"+(1000+Math.random()*9000|0);
     o.innerText="Weekly: "+c;
+    validCodes.push(c);
   }
 
   window._m=function(){
     let c="JETX-M30-"+(1000+Math.random()*9000|0);
     o.innerText="Monthly: "+c;
+    validCodes.push(c);
   }
 
   window._contactAdmin=function(){
