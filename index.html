@@ -2,10 +2,7 @@
         <html lang="sw">
         <head>
         <meta charset="UTF-8">
-        <title>JetX Time Signals - Accurate JetX Predictions</title>
-        <meta name="description" content="The number one loved, believed, and accurate platform that gives out time signals to play and win big in the JetX game. Get the JetX Signals app for Android or use the website for iPhone.">
-        <meta name="keywords" content="JetX, JetX Signals, JetX APK, JetX App, JetX Predictor, JetX Game">
-        <meta name="author" content="4M THE KING">
+        <title>JetX Time Signals</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body{margin:0;font-family:Arial,sans-serif;background:#0f172a;color:#fff;text-align:center}
@@ -15,7 +12,6 @@ h1{margin-bottom:10px;cursor:pointer}
 input,button{width:100%;padding:12px;border-radius:8px;border:none;font-size:16px;margin-top:10px}
 .verify{background:#22c55e;color:#000;font-weight:bold}
 #contactAdmin{background:#25D366;color:#fff;font-weight:bold;margin-top:12px}
-#downloadBtn{background:#f97316;color:#fff;font-weight:bold;margin-top:12px; text-decoration: none; display: block;}
 #errorMsg{color:#f87171;margin-top:10px}
 #app{display:none;padding-top:30px;}
 #nextBtn{background:#3b82f6;color:#fff;font-weight:bold;margin-top:12px;padding:10px}
@@ -25,7 +21,9 @@ input,button{width:100%;padding:12px;border-radius:8px;border:none;font-size:16p
 .blue{background:#2563eb}
 .green{background:#16a34a}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:50px;}
-.signal{padding:10px;border-radius:8px;font-weight:bold}
+.signal{padding:10px;border-radius:8px;font-weight:bold; opacity: 0; animation: fadeIn 0.5s ease-in-out forwards;}
+.expired{filter: blur(4px); opacity: 0.5;}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .notice{font-size:12px;margin-top:10px;color:#facc15}
 #adminPanel{display:none;background:#111827;padding:15px;border-radius:12px;margin-top:20px}
 .admin-btn{background:#f97316;color:#fff;font-weight:bold}
@@ -40,15 +38,15 @@ input,button{width:100%;padding:12px;border-radius:8px;border:none;font-size:16p
   <h1 id="titleSub">JetX Time Signals</h1>
 
         <div class="sub-box">
-<b>Weekly – 4000 TSH</b><br>
-    Lipa: <b>22522526 (TIGO)</b><br>
-Jina: <b>Anton Samwel</b>
+<b>Weekly – 10000 TSH</b><br>
+    Lipa: <b>130887255 (AIRTEL)</b><br>
+Jina: <b>HARAPHAT</b>
   </div>
 
 <div class="sub-box">
-<b>Monthly – 10000 TSH</b><br>
-    Lipa: <b>22522526 (TIGO)</b><br>
-Jina: <b>Anton Samwel</b>
+<b>Monthly – 20000 TSH</b><br>
+    Lipa: <b>130887255 (AIRTEL)</b><br>
+Jina: <b>HARAPHAT</b>
   </div>
 
 <input id="c" placeholder="Weka Subscription Code">
@@ -59,9 +57,6 @@ Jina: <b>Anton Samwel</b>
 <button id="contactAdmin" onclick="_contactAdmin()">
 Contact Admin via WhatsApp
 </button>
-
-<a id="downloadBtn" href="app-release.apk">Download for Android</a>
-
 </div>
 
 <!-- APP -->
@@ -94,10 +89,11 @@ Contact Admin via WhatsApp
 
 <script>
 (function(){
-  const P="2022";
-  const EXP_KEY="jetx_expiry";
-
+  const P="VIRGOSEVA";
+  const EXP_KEY="jetx_expiry_v2"; // Changed key to invalidate old subscriptions
   let unlocked=false;
+  let isGenerating = false;
+  let blurInterval = null;
 
   window.onload=function(){
     let exp=localStorage.getItem(EXP_KEY);
@@ -112,50 +108,96 @@ Contact Admin via WhatsApp
 
   window._v=function(){
     let code=c.value.trim();
-
     if(code.startsWith("JETX-W7")){
       let expiry=Date.now()+ (7*24*60*60*1000);
       localStorage.setItem(EXP_KEY,expiry);
-    }
-    else if(code.startsWith("JETX-M30")){
+    } else if(code.startsWith("JETX-M30")){
       let expiry=Date.now()+ (30*24*60*60*1000);
       localStorage.setItem(EXP_KEY,expiry);
-    }
-    else{
+    } else {
       errorMsg.innerText="Invalid subscription code";
       return;
     }
-
     subscription.style.display="none";
     app.style.display="block";
     _g();
   }
 
   const biasedRandom = (min, max, bias, influence) => {
-      let rnd = Math.random() * (max - min) + min, // random in range
-          mix = Math.random() * influence; // random mixer
+      let rnd = Math.random() * (max - min) + min;
+      let mix = Math.random() * influence;
       return rnd * (1 - mix) + bias * mix;
   };
 
-  const t=()=>`${String(new Date().getHours()).padStart(2,"0")}:${Math.random()*60|0}:${Math.random()*60|0}`;
+  const generateRandomTime = (minMinutes, maxMinutes) => {
+      const now = new Date();
+      const randomMinutes = Math.random() * (maxMinutes - minMinutes) + minMinutes;
+      const signalTime = new Date(now.getTime() + randomMinutes * 60000);
+      return signalTime;
+  };
 
-  window._g=function(){
-    s.innerHTML="";
-
-    // Blue odds (2.00 - 4.99), biased towards 2.00-3.50
-    l.innerText = biasedRandom(2.00, 4.99, 2.75, 0.7).toFixed(2);
-
-    // Green odds (5.00 - 9.50), biased towards 5.00-6.50
-    h.innerText = biasedRandom(5.00, 9.50, 5.75, 0.7).toFixed(2);
-
-    for(let i=0;i<16;i++){
-      let d=document.createElement("div");
-      // 70% chance of blue, 30% chance of green
-      d.className="signal "+(Math.random() < 0.7 ?"blue":"green");
-      d.innerText=t();
-      s.appendChild(d);
-    }
+  function shuffle(array) {
+      let currentIndex = array.length,  randomIndex;
+      while (currentIndex > 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      }
+      return array;
   }
+
+  window._g = function() {
+    if (isGenerating) return; // Prevent multiple clicks
+    isGenerating = true;
+    s.innerHTML = "";
+
+    if (blurInterval) clearInterval(blurInterval);
+
+    const lowOdd = biasedRandom(2.00, 4.99, 2.75, 0.7);
+    const highOdd = biasedRandom(5.00, 9.50, 5.75, 0.7);
+    l.innerText = lowOdd.toFixed(2);
+    h.innerText = highOdd.toFixed(2);
+
+    let greenProbability = 0.3;
+    if (highOdd > 8.5) {
+        greenProbability = 0.5;
+    }
+
+    const signals = [];
+    for (let i = 0; i < 16; i++) {
+        signals.push({
+            time: generateRandomTime(1, 60),
+            color: Math.random() < (1 - greenProbability) ? 'blue' : 'green'
+        });
+    }
+
+    shuffle(signals);
+
+    signals.forEach((signal, i) => {
+        setTimeout(() => {
+            let d = document.createElement("div");
+            d.className = "signal " + signal.color;
+            d.innerText = `${String(signal.time.getHours()).padStart(2, "0")}:${String(signal.time.getMinutes()).padStart(2, "0")}:${String(signal.time.getSeconds()).padStart(2, "0")}`;
+            d.dataset.time = signal.time.getTime();
+            s.appendChild(d);
+
+            if (i === signals.length - 1) {
+                isGenerating = false; // Re-enable button after last signal
+            }
+        }, i * 100);
+    });
+
+    blurInterval = setInterval(() => {
+        const now = Date.now();
+        document.querySelectorAll('.signal').forEach(signal => {
+            const signalTime = parseInt(signal.dataset.time);
+            if(now > signalTime){
+                signal.classList.add('expired');
+            }
+        });
+    }, 1000);
+  }
+
 
   let clickCount=0, timer=null;
 
@@ -219,7 +261,7 @@ Contact Admin via WhatsApp
 
   window._contactAdmin=function(){
     let msg = encodeURIComponent("Hi, nimefanya payment, tafadhali nitumie subscription code.");
-    let phone = "255611025037";
+    let phone = "+255617496422";
     let url = "https://wa.me/"+phone+"?text="+msg;
 window.open(url, "_blank");
 }
