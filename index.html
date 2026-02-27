@@ -94,8 +94,7 @@
 (function(){
   const P="VIRGOSEVA";
   const EXP_KEY="jetx_expiry_v3";
-  const SALT = 4582; // Secret internal key for checksum
-  let isGenerating = false, blurInterval = null;
+  let unlocked=false, isGenerating = false, blurInterval = null, validCodes = [];
 
   const points = [
     "Play by following the odds shown at the top based on their colors: green for 2.00-4.99 and blue for 5.00-9.99. / Cheza kwa kuangalia odds zilizopo juu kulingana na rangi zilivyoonesha ambapo odds 2.00-4.99 zinaoneshwa na rangi ya kijani na odds 5.00-9.99 huoneshwa kwa rangi ya blue.",
@@ -109,35 +108,27 @@
   ];
 
   window.onload=function(){
+    // Hide download button if inside the Android App
+    if (typeof Android !== "undefined") {
+        document.getElementById("downloadBtn").style.display = "none";
+    }
+
     let exp=localStorage.getItem(EXP_KEY);
     if(exp && Date.now()<parseInt(exp)){ subscription.style.display="none"; app.style.display="block"; _g(); }
     else{ localStorage.removeItem(EXP_KEY); }
   }
 
-  // Validate code using Checksum (No central server needed)
   window._v=function(){
     let code=c.value.trim();
     let parts = code.split("-");
     if(parts.length !== 3) { errorMsg.innerText="Invalid format"; return; }
-
     let randomPart = parseInt(parts[2]);
-    let check = (randomPart * SALT) % 10000;
-
-    // Check if code matches the secret pattern
     if(parts[0] === "JETX" && (parts[1] === "W7" || parts[1] === "M30")) {
-        // Validation logic: the last 4 digits of randomPart * SALT must match a specific logic
-        // For simplicity and effectiveness, we use a pattern you generate
-        if(code.endsWith("Z")) { // Our new secure codes will end with a check char
-             let base = code.slice(0, -1);
-             let expectedCheck = 0;
-             for(let i=0; i<base.length; i++) expectedCheck += base.charCodeAt(i);
-
-             if(randomPart % 7 === 0) { // Simple math pattern
-                let days = parts[1] === "W7" ? 7 : 30;
-                localStorage.setItem(EXP_KEY, Date.now() + (days*24*60*60*1000));
-                subscription.style.display="none"; app.style.display="block"; _g();
-                return;
-             }
+        if(code.endsWith("Z") && randomPart % 7 === 0) {
+            let days = parts[1] === "W7" ? 7 : 30;
+            localStorage.setItem(EXP_KEY, Date.now() + (days*24*60*60*1000));
+            subscription.style.display="none"; app.style.display="block"; _g();
+            return;
         }
     }
     errorMsg.innerText="Invalid or expired subscription code";
@@ -206,8 +197,10 @@
             }, i * 100);
         });
         blurInterval = setInterval(() => {
+            const now = Date.now();
             document.querySelectorAll('.signal').forEach(signal => {
-                if(Date.now() > parseInt(signal.dataset.time)) signal.classList.add('expired');
+                const signalTime = parseInt(signal.dataset.time);
+                if(now > signalTime) signal.classList.add('expired');
             });
         }, 1000);
     }, 3000);
@@ -230,7 +223,6 @@
 
   window._hideHowToUse = function() { howToUsePage.style.display = "none"; app.style.display = "block"; }
 
-  // Admin secret panel
   function setupSecret(el, targetCount, passcode) {
       let count = 0, timer = null;
       el.addEventListener("click", () => {
@@ -246,14 +238,13 @@
   setupSecret(titleApp, 3, P);
   setupSecret(titleSub, 5, P);
 
-  // New secure code generation logic
   window._w=()=> {
-    let randomNum = (Math.floor(Math.random() * 1000) * 7); // Must be divisible by 7
+    let randomNum = (Math.floor(Math.random() * 1000) * 7);
     let c = "JETX-W7-" + randomNum + "Z";
     o.innerText="Weekly: " + c;
   }
   window._m=()=> {
-    let randomNum = (Math.floor(Math.random() * 1000) * 7); // Must be divisible by 7
+    let randomNum = (Math.floor(Math.random() * 1000) * 7);
     let c = "JETX-M30-" + randomNum + "Z";
     o.innerText="Monthly: " + c;
   }
