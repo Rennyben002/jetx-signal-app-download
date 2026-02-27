@@ -1,33 +1,44 @@
 <!DOCTYPE html>
-        <html lang="sw">
-        <head>
-        <meta charset="UTF-8">
-        <title>JetX Time Signals</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body{margin:0;font-family:Arial,sans-serif;background:#0f172a;color:#fff;text-align:center}
-.container{padding:15px; max-width: 600px; margin: auto;}
-h1{margin-bottom:10px;cursor:pointer}
-.sub-box{background:#1e293b;padding:15px;border-radius:12px;margin:12px 0}
-input,button{width:100%;padding:12px;border-radius:8px;border:none;font-size:16px;margin-top:10px}
-.verify{background:#22c55e;color:#000;font-weight:bold}
-#contactAdmin{background:#25D366;color:#fff;font-weight:bold;margin-top:12px}
-#errorMsg{color:#f87171;margin-top:10px}
-#app{display:none;padding-top:30px;}
-#nextBtn{background:#3b82f6;color:#fff;font-weight:bold;margin-top:12px;padding:10px}
-#howToUseBtn{background:#64748b;color:#fff;font-weight:bold;margin-top:10px;padding:8px;}
-.odds{display:flex;gap:10px;margin:15px 0}
-.odds div{flex:1;padding:15px;border-radius:10px;font-size:20px;font-weight:bold}
-.blue{background:#2563eb}
-.green{background:#16a34a}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:50px;}
-.signal{padding:10px;border-radius:8px;font-weight:bold; opacity: 0; animation: fadeIn 0.5s ease-in-out forwards;}
-.expired{filter: blur(4px); opacity: 0.5;}
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.notice{font-size:12px;margin-top:10px;color:#facc15}
-#adminPanel{display:none;background:#111827;padding:15px;border-radius:12px;margin-top:20px}
-.admin-btn{background:#f97316;color:#fff;font-weight:bold}
-</style>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <title>JetX Time Signals</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body{margin:0;font-family:Arial,sans-serif;background:#0f172a;color:#fff;text-align:center;overflow-x:hidden;}
+        .container{padding:15px; max-width: 600px; margin: auto;}
+        h1{margin-bottom:10px;}
+        .sub-box{background:#1e293b;padding:15px;border-radius:12px;margin:12px 0}
+        input,button{width:100%;padding:12px;border-radius:8px;border:none;font-size:16px;margin-top:10px}
+        .verify{background:#22c55e;color:#000;font-weight:bold}
+        #contactAdmin{background:#25D366;color:#fff;font-weight:bold;margin-top:12px}
+        #downloadBtn{background:#f97316;color:#fff;font-weight:bold;margin-top:12px; text-decoration: none; display: block; padding: 12px; border-radius: 8px;}
+        #errorMsg{color:#f87171;margin-top:10px}
+        #app, #howToUsePage, #loadingArea{display:none;padding-top:30px;}
+        #nextBtn{background:#3b82f6;color:#fff;font-weight:bold;margin-top:12px;padding:10px}
+        #howToUseBtn{background:#64748b;color:#fff;font-weight:bold;margin-top:10px;padding:12px; border-radius: 8px; cursor: pointer; border: none; width: 100%; font-size: 16px;}
+        .odds{display:flex;gap:10px;margin:15px 0}
+        .odds div{flex:1;padding:15px;border-radius:10px;font-size:20px;font-weight:bold}
+        .blue{background:#2563eb}
+        .green{background:#16a34a}
+        .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:50px;}
+        .signal{padding:10px;border-radius:8px;font-weight:bold; opacity: 0; animation: fadeIn 0.5s ease-in-out forwards;}
+        .expired{filter: blur(4px); opacity: 0.5;}
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .notice{font-size:12px;margin-top:10px;color:#facc15}
+        #adminPanel{display:none;background:#111827;padding:15px;border-radius:12px;margin-top:20px}
+        .admin-btn{background:#f97316;color:#fff;font-weight:bold}
+        .guide-point { text-align: left; margin-bottom: 15px; opacity: 0; }
+        .guide-number { color: #3b82f6; font-weight: bold; }
+        #waChannelBtn{background:#25D366;color:#fff;font-weight:bold;margin-top:20px; text-decoration: none; display: block; padding: 12px; border-radius: 8px;}
+
+        /* NEON RADAR ANIMATION */
+        .radar-box { position: relative; width: 150px; height: 150px; margin: 40px auto; border-radius: 50%; border: 2px solid #00f3ff; box-shadow: 0 0 15px #00f3ff, inset 0 0 15px #00f3ff; animation: rotateRing 4s linear infinite; }
+        .radar-box::after { content: ""; position: absolute; top: 50%; left: 50%; width: 140px; height: 140px; background: conic-gradient(from 0deg, transparent 80%, rgba(0, 243, 255, 0.5)); border-radius: 50%; transform: translate(-50%, -50%); animation: scan 2s linear infinite; }
+        @keyframes rotateRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes scan { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+        #loadingText { font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #00f3ff; font-size: 18px; margin-top: 20px; }
+    </style>
 </head>
 
 <body>
@@ -36,53 +47,47 @@ input,button{width:100%;padding:12px;border-radius:8px;border:none;font-size:16p
 <!-- SUBSCRIPTION -->
 <div id="subscription">
   <h1 id="titleSub">JetX Time Signals</h1>
-
-        <div class="sub-box">
-<b>Weekly – 10000 TSH</b><br>
-    Lipa: <b>130887255 (AIRTEL)</b><br>
-Jina: <b>HARAPHAT</b>
-  </div>
-
-<div class="sub-box">
-<b>Monthly – 20000 TSH</b><br>
-    Lipa: <b>130887255 (AIRTEL)</b><br>
-Jina: <b>HARAPHAT</b>
-  </div>
-
-<input id="c" placeholder="Weka Subscription Code">
-<button class="verify" onclick="_v()">VERIFY CODE</button>
+  <div class="sub-box"><b>Weekly – 10000 TSH</b><br>Lipa: <b>130887255 (AIRTEL)</b><br>Jina: <b>HARAPHAT</b></div>
+  <div class="sub-box"><b>Monthly – 20000 TSH</b><br>Lipa: <b>130887255 (AIRTEL)</b><br>Jina: <b>HARAPHAT</b></div>
+  <input id="c" placeholder="Weka Subscription Code">
+  <button class="verify" onclick="_v()">VERIFY CODE</button>
   <div id="errorMsg"></div>
+  <button id="contactAdmin" onclick="_contactAdmin()">Contact Admin via WhatsApp</button>
+  <a id="downloadBtn" href="app-release.apk">Download for Android</a>
+</div>
 
-<!-- CONTACT ADMIN BUTTON -->
-<button id="contactAdmin" onclick="_contactAdmin()">
-Contact Admin via WhatsApp
-</button>
+<!-- LOADING AREA -->
+<div id="loadingArea">
+    <div class="radar-box"></div>
+    <div id="loadingText"></div>
 </div>
 
 <!-- APP -->
 <div id="app">
-<h1 id="titleApp">JetX Signals</h1>
-
+  <h1 id="titleApp">JetX Signals</h1>
   <button id="nextBtn" onclick="_g()">NEXT SIGNALS</button>
-  <button id="howToUseBtn" onclick="Android.openHowToUse()">How to Use</button>
-
-<div class="odds">
-<div class="blue" id="l">2.00</div>
-    <div class="green" id="h">5.01</div>
+  <button id="howToUseBtn" onclick="_showHowToUse()">How to Use</button>
+  <div class="odds"><div class="blue" id="l">2.00</div><div class="green" id="h">5.01</div></div>
+  <div class="grid" id="s"></div>
+  <div class="notice">Sekunde zinaweza kudelay hadi kwa sekunde 15+ au 15-</div>
 </div>
 
-  <div class="grid" id="s"></div>
-<div class="notice">Sekunde zinaweza kudelay hadi kwa sekunde 15+ au 15-</div>
+<!-- HOW TO USE PAGE -->
+<div id="howToUsePage">
+    <h1 id="titleGuide">How to Use / Jinsi ya Kutumia</h1>
+    <div id="guideContent">
+        <!-- Points will be filled via JS typewriter -->
+    </div>
+    <a id="waChannelBtn" href="https://whatsapp.com/channel/0029VbBobh01yT23vRZzrr0Y">Join our WhatsApp Channel</a>
+    <button onclick="_hideHowToUse()" style="background: #64748b; color: white; margin-top: 15px;">Back to Signals</button>
 </div>
 
 <!-- ADMIN PANEL -->
 <div id="adminPanel">
-<h2>Admin Panel</h2>
-  <div id="adminContent">
-    <button class="admin-btn" onclick="_w()">Generate Weekly</button>
-<button class="admin-btn" onclick="_m()" style="margin-top:10px">Generate Monthly</button>
-    <p id="o" style="margin-top:10px;color:#22c55e;font-weight:bold"></p>
-</div>
+  <h2>Admin Panel</h2>
+  <button class="admin-btn" onclick="_w()">Generate Weekly</button>
+  <button class="admin-btn" onclick="_m()" style="margin-top:10px">Generate Monthly</button>
+  <p id="o" style="margin-top:10px;color:#22c55e;font-weight:bold"></p>
 </div>
 
 </div>
@@ -90,43 +95,35 @@ Contact Admin via WhatsApp
 <script>
 (function(){
   const P="VIRGOSEVA";
-  const EXP_KEY="jetx_expiry_v2";
-  let unlocked=false;
-  let isGenerating = false;
-  let blurInterval = null;
-  let validCodes = [];
+  const EXP_KEY="jetx_expiry_v3"; // Incremented version to expire all previous sessions
+  let unlocked=false, isGenerating = false, blurInterval = null, validCodes = [];
+
+  const points = [
+    "Play by following the odds shown at the top based on their colors: green for 2.00-4.99 and blue for 5.00-9.99. / Cheza kwa kuangalia odds zilizopo juu kulingana na rangi zilivyoonesha ambapo odds 2.00-4.99 zinaoneshwa na rangi ya kijani na odds 5.00-9.99 huoneshwa kwa rangi ya blue.",
+    "If signal time arrives and a high odd (5+) round is in progress, wait for 2-3 rounds before playing the current signal. / Muda wa signal ukifika na ukaingia ukakuta kuna round inaendelea na imetoa odd kubwa kuanzia 5+, subiri round 2-3 kisha cheza signal iliyopo.",
+    "Signals may delay by up to 15 seconds due to system fluctuations. Signals are 90% accurate. / Signal inaweza kudelay hadi kwa sekunde 15 kabla au baada ya muda uliooneshwa, hii hutokana na kuchengeshwa kwa system (beast mode). Signals ni uhakika 90%.",
+    "Signals indicate an upward trend, not exact odds. ADVICE: Use two stakes. / Signal zinaonesha odds flani kupanda juu na sio exact. USHAURI: Cheza kwa dau mbili, moja (kubwa) toa ndani ya odds za signal na nyingine toa kulingana na risk yako.",
+    "Don't risk 100% of your capital; use only 10% per round. / Usiweke 100% ya mtaji wako, tumia ndani ya 10% ya mtaji wako wa kubeti kwa round.",
+    "Set limits for daily time and profit. / Weka limit ya muda wa kucheza na faida kwa siku.",
+    "Use a strong internet connection. / Cheza ukiwa kwenye mtandao mzuri.",
+    "Use auto-cashout during signal time. / Ni vizuri ukaweka autocashout kwenye muda wa signal."
+  ];
 
   window.onload=function(){
     let exp=localStorage.getItem(EXP_KEY);
-    if(exp && Date.now()<parseInt(exp)){
-      subscription.style.display="none";
-      app.style.display="block";
-      _g();
-    }else{
-      localStorage.removeItem(EXP_KEY);
-    }
+    if(exp && Date.now()<parseInt(exp)){ subscription.style.display="none"; app.style.display="block"; _g(); }
+    else{ localStorage.removeItem(EXP_KEY); }
   }
 
   window._v=function(){
     let code=c.value.trim();
     const codeIndex = validCodes.indexOf(code);
-
     if (codeIndex > -1) {
-      if (code.startsWith("JETX-W7")) {
-          let expiry = Date.now() + (7*24*60*60*1000);
-          localStorage.setItem(EXP_KEY, expiry);
-      } else if (code.startsWith("JETX-M30")) {
-          let expiry = Date.now() + (30*24*60*60*1000);
-          localStorage.setItem(EXP_KEY, expiry);
-      }
-      validCodes.splice(codeIndex, 1); // Use up the code
-      subscription.style.display="none";
-      app.style.display="block";
-      _g();
-    } else {
-      errorMsg.innerText="Invalid or already used subscription code";
-      return;
-    }
+      let days = code.startsWith("JETX-W7") ? 7 : 30;
+      localStorage.setItem(EXP_KEY, Date.now() + (days*24*60*60*1000));
+      validCodes.splice(codeIndex, 1);
+      subscription.style.display="none"; app.style.display="block"; _g();
+    } else { errorMsg.innerText="Invalid or already used subscription code"; }
   }
 
   const biasedRandom = (min, max, bias, influence) => {
@@ -135,19 +132,18 @@ Contact Admin via WhatsApp
       return rnd * (1 - mix) + bias * mix;
   };
 
-  const generateRandomTime = (minMinutes, maxMinutes) => {
+  const generateHourSignalTime = () => {
       const now = new Date();
-      const randomMinutes = Math.random() * (maxMinutes - minMinutes) + minMinutes;
-      const signalTime = new Date(now.getTime() + randomMinutes * 60000);
+      const signalTime = new Date(now.getTime());
+      signalTime.setMinutes(Math.floor(Math.random() * 60));
+      signalTime.setSeconds(Math.floor(Math.random() * 60));
       return signalTime;
   };
 
   function shuffle(array) {
-      let currentIndex = array.length,  randomIndex;
-      while (currentIndex > 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
       }
       return array;
   }
@@ -155,126 +151,107 @@ Contact Admin via WhatsApp
   window._g = function() {
     if (isGenerating) return;
     isGenerating = true;
-    s.innerHTML = "";
-    if (blurInterval) clearInterval(blurInterval);
 
-    const lowOdd = biasedRandom(2.00, 4.99, 2.75, 0.7);
-    const highOdd = biasedRandom(5.00, 9.50, 5.75, 0.7);
-    l.innerText = lowOdd.toFixed(2);
-    h.innerText = highOdd.toFixed(2);
+    app.style.display = "none";
+    loadingArea.style.display = "block";
+    loadingText.innerText = "";
 
-    let greenProbability = 0.3;
-    if (highOdd > 8.5) {
-        greenProbability = 0.5;
-    }
+    let lText = "Analyzing market...";
+    let charIdx = 0;
+    let typeInt = setInterval(() => {
+        loadingText.innerText += lText[charIdx];
+        charIdx++;
+        if(charIdx >= lText.length) clearInterval(typeInt);
+    }, 100);
 
-    const signals = [];
-    for (let i = 0; i < 16; i++) {
-        signals.push({
-            time: generateRandomTime(1, 60),
-            color: Math.random() < (1 - greenProbability) ? 'blue' : 'green'
-        });
-    }
+    setTimeout(() => {
+        loadingArea.style.display = "none";
+        app.style.display = "block";
+        s.innerHTML = "";
+        if (blurInterval) clearInterval(blurInterval);
 
-    shuffle(signals);
+        const lowOdd = biasedRandom(2.00, 4.99, 2.75, 0.7);
+        const highOdd = Math.random() < 0.1 ? biasedRandom(7.00, 9.99, 7.5, 0.8) : biasedRandom(5.00, 6.99, 5.5, 0.7);
 
-    signals.forEach((signal, i) => {
-        setTimeout(() => {
-            let d = document.createElement("div");
-            d.className = "signal " + signal.color;
-            d.innerText = `${String(signal.time.getHours()).padStart(2, "0")}:${String(signal.time.getMinutes()).padStart(2, "0")}:${String(signal.time.getSeconds()).padStart(2, "0")}`;
-            d.dataset.time = signal.time.getTime();
-            s.appendChild(d);
+        l.innerText = lowOdd.toFixed(2);
+        h.innerText = highOdd.toFixed(2);
 
-            if (i === signals.length - 1) {
-                isGenerating = false;
-            }
-        }, i * 100);
-    });
-
-    blurInterval = setInterval(() => {
-        const now = Date.now();
-        document.querySelectorAll('.signal').forEach(signal => {
-            const signalTime = parseInt(signal.dataset.time);
-            if(now > signalTime){
-                signal.classList.add('expired');
-            }
-        });
-    }, 1000);
-  }
-
-
-  let clickCount=0, timer=null;
-
-  titleApp.addEventListener("click",()=>{
-    clickCount++;
-    if(clickCount===1) timer=setTimeout(()=>clickCount=0,2000);
-
-    if(clickCount===3){
-      clearTimeout(timer);
-      clickCount=0;
-
-      if(!unlocked){
-        let p=prompt("Weka Admin Secret Code");
-        if(p===P){
-          unlocked=true;
-          adminPanel.style.display="block";
-        }else{
-          alert("Wrong admin code");
+        let greenProbability = highOdd > 7.0 ? 0.4 : 0.25;
+        const signals = [];
+        for (let i = 0; i < 16; i++) {
+            signals.push({ time: generateHourSignalTime(), color: Math.random() < (1 - greenProbability) ? 'blue' : 'green' });
         }
-      }else{
-        adminPanel.style.display="none";
-        unlocked=false;
-      }
-    }
-  });
+        shuffle(signals);
 
-  let subClick=0, subTimer=null;
+        signals.forEach((signal, i) => {
+            setTimeout(() => {
+                let d = document.createElement("div");
+                d.className = "signal " + signal.color;
+                d.innerText = `${String(signal.time.getHours()).padStart(2, "0")}:${String(signal.time.getMinutes()).padStart(2, "0")}:${String(signal.time.getSeconds()).padStart(2, "0")}`;
+                d.dataset.time = signal.time.getTime();
 
-  titleSub.addEventListener("click",()=>{
-    subClick++;
-    if(subClick===1) subTimer=setTimeout(()=>subClick=0,2500);
+                if(Date.now() > signal.time.getTime()){
+                    d.classList.add('expired');
+                }
 
-    if(subClick===5){
-      clearTimeout(subTimer);
-      subClick=0;
+                s.appendChild(d);
+                if (i === signals.length - 1) isGenerating = false;
+            }, i * 100);
+        });
 
-      if(!unlocked){
-        let p=prompt("Weka Admin Secret Code");
-        if(p===P){
-          unlocked=true;
-          adminPanel.style.display="block";
-        }else{
-          alert("Wrong admin code");
-        }
-      }else{
-        adminPanel.style.display="none";
-        unlocked=false;
-      }
-    }
-  });
-
-  window._w=function(){
-    let c="JETX-W7-"+(1000+Math.random()*9000|0);
-    o.innerText="Weekly: "+c;
-    validCodes.push(c);
+        blurInterval = setInterval(() => {
+            const now = Date.now();
+            document.querySelectorAll('.signal').forEach(signal => {
+                const signalTime = parseInt(signal.dataset.time);
+                if(now > signalTime) signal.classList.add('expired');
+            });
+        }, 1000);
+    }, 3000);
   }
 
-  window._m=function(){
-    let c="JETX-M30-"+(1000+Math.random()*9000|0);
-    o.innerText="Monthly: "+c;
-    validCodes.push(c);
+  window._showHowToUse = function() {
+      if (typeof Android !== 'undefined' && Android.openHowToUse) {
+          Android.openHowToUse();
+      } else {
+          app.style.display = "none";
+          howToUsePage.style.display = "block";
+          guideContent.innerHTML = "";
+          points.forEach((point, i) => {
+              setTimeout(() => {
+                  let d = document.createElement("div");
+                  d.className = "guide-point";
+                  d.innerHTML = `<span class="guide-number">${i+1}.</span> ${point}`;
+                  guideContent.appendChild(d);
+                  setTimeout(() => d.style.opacity = "1", 50);
+              }, i * 400);
+          });
+      }
   }
 
-  window._contactAdmin=function(){
-    let msg = encodeURIComponent("Hi, nimefanya payment, tafadhali nitumie subscription code.");
-    let phone = "+255617496422";
-    let url = "https://wa.me/"+phone+"?text="+msg;
-window.open(url, "_blank");
-}
+  window._hideHowToUse = function() { howToUsePage.style.display = "none"; app.style.display = "block"; }
 
+  function setupSecret(el, targetCount, passcode) {
+      let count = 0, timer = null;
+      el.addEventListener("click", () => {
+          count++;
+          if(count === 1) timer = setTimeout(() => count = 0, 2000);
+          if(count === targetCount) {
+              clearTimeout(timer); count = 0;
+              if(!unlocked) {
+                  let p = prompt("Weka Admin Secret Code");
+                  if(p === passcode) { unlocked = true; adminPanel.style.display = "block"; }
+                  else { alert("Wrong admin code"); }
+              } else { adminPanel.style.display = "none"; unlocked = false; }
+          }
+      });
+  }
+  setupSecret(titleApp, 3, P);
+  setupSecret(titleSub, 5, P);
+
+  window._w=()=> { let c="JETX-W7-"+(1000+Math.random()*9000|0); o.innerText="Weekly: "+c; validCodes.push(c); }
+  window._m=()=> { let c="JETX-M30-"+(1000+Math.random()*9000|0); o.innerText="Monthly: "+c; validCodes.push(c); }
+  window._contactAdmin=()=> { window.open("https://wa.me/+255617496422?text=" + encodeURIComponent("Hi, nimefanya payment, tafadhali nitumie subscription code."), "_blank"); }
 })();
 </script>
-
 </body>
 </html>
