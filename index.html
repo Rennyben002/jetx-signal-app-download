@@ -93,7 +93,7 @@
 <script>
 (function(){
   const P="VIRGOSEVA";
-  const EXP_KEY="jetx_expiry_v3";
+  const EXP_KEY="jetx_expiry_v5"; // Force expiration for all users
   let unlocked=false, isGenerating = false, blurInterval = null, validCodes = [];
 
   const points = [
@@ -108,8 +108,8 @@
   ];
 
   window.onload=function(){
-    // Hide download button if inside the Android App
-    if (typeof Android !== "undefined") {
+    // Hide download button if inside the Android App using our unique name tag
+    if (navigator.userAgent.includes("JetXSignalsApp") || typeof Android !== "undefined") {
         document.getElementById("downloadBtn").style.display = "none";
     }
 
