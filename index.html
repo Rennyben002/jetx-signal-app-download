@@ -14,7 +14,7 @@
         #contactAdmin{background:#25D366;color:#fff;font-weight:bold;margin-top:12px}
         #downloadBtn{background:#f97316;color:#fff;font-weight:bold;margin-top:12px; text-decoration: none; display: block; padding: 12px; border-radius: 8px;}
         #errorMsg{color:#f87171;margin-top:10px}
-        #app, #howToUsePage, #loadingArea{display:none;padding-top:30px;}
+        #app, #howToUsePage, #loadingArea, #offlinePage{display:none;padding-top:30px;}
         #nextBtn{background:#3b82f6;color:#fff;font-weight:bold;margin-top:12px;padding:10px}
         #howToUseBtn{background:#64748b;color:#fff;font-weight:bold;margin-top:10px;padding:12px; border-radius: 8px; cursor: pointer; border: none; width: 100%; font-size: 16px;}
         .odds{display:flex;gap:10px;margin:15px 0}
@@ -38,11 +38,23 @@
         @keyframes rotateRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes scan { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
         #loadingText { font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #00f3ff; font-size: 18px; margin-top: 20px; }
+
+        /* OFFLINE PAGE STYLING */
+        #offlinePage { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        #offlinePage h1 { color: #f87171; font-size: 28px; }
+        #offlinePage p { font-size: 18px; margin-top: 10px; }
     </style>
 </head>
 
 <body>
 <div class="container">
+
+<!-- OFFLINE SCREEN -->
+<div id="offlinePage">
+    <h1>Connection Lost</h1>
+    <p>This app requires an active internet connection to work. Please check your data or Wi-Fi.</p>
+    <button onclick="window.location.reload()" style="background:#3b82f6; color:white; width: 200px; margin-top: 20px;">RETRY</button>
+</div>
 
 <!-- SUBSCRIPTION -->
 <div id="subscription">
@@ -93,8 +105,8 @@
 <script>
 (function(){
   const P="VIRGOSEVA";
-  const EXP_KEY="jetx_expiry_v5"; // Force expiration for all users
-  let unlocked=false, isGenerating = false, blurInterval = null, validCodes = [];
+  const EXP_KEY="jetx_expiry_v6"; // Forced Logout for strict online update
+  let isGenerating = false, blurInterval = null, validCodes = [];
 
   const points = [
     "Play by following the odds shown at the top based on their colors: green for 2.00-4.99 and blue for 5.00-9.99. / Cheza kwa kuangalia odds zilizopo juu kulingana na rangi zilivyoonesha ambapo odds 2.00-4.99 zinaoneshwa na rangi ya kijani na odds 5.00-9.99 huoneshwa kwa rangi ya blue.",
@@ -107,11 +119,25 @@
     "Use auto-cashout during signal time. / Ni vizuri ukaweka autocashout kwenye muda wa signal."
   ];
 
+  function checkOnline() {
+      if(!navigator.onLine) {
+          offlinePage.style.display = "flex";
+          subscription.style.display = "none";
+          app.style.display = "none";
+          howToUsePage.style.display = "none";
+          loadingArea.style.display = "none";
+      } else {
+          offlinePage.style.display = "none";
+      }
+  }
+
+  window.addEventListener('offline', checkOnline);
+  window.addEventListener('online', checkOnline);
+
   window.onload=function(){
-    // Hide download button if inside the Android App using our unique name tag
-    if (navigator.userAgent.includes("JetXSignalsApp") || typeof Android !== "undefined") {
-        document.getElementById("downloadBtn").style.display = "none";
-    }
+    checkOnline();
+    const isApp = navigator.userAgent.includes("JetXSignalsApp") || typeof Android !== "undefined";
+    if (isApp) document.getElementById("downloadBtn").style.display = "none";
 
     let exp=localStorage.getItem(EXP_KEY);
     if(exp && Date.now()<parseInt(exp)){ subscription.style.display="none"; app.style.display="block"; _g(); }
@@ -238,16 +264,8 @@
   setupSecret(titleApp, 3, P);
   setupSecret(titleSub, 5, P);
 
-  window._w=()=> {
-    let randomNum = (Math.floor(Math.random() * 1000) * 7);
-    let c = "JETX-W7-" + randomNum + "Z";
-    o.innerText="Weekly: " + c;
-  }
-  window._m=()=> {
-    let randomNum = (Math.floor(Math.random() * 1000) * 7);
-    let c = "JETX-M30-" + randomNum + "Z";
-    o.innerText="Monthly: " + c;
-  }
+  window._w=()=> { let randomNum = (Math.floor(Math.random() * 1000) * 7); let c = "JETX-W7-" + randomNum + "Z"; o.innerText="Weekly: " + c; }
+  window._m=()=> { let randomNum = (Math.floor(Math.random() * 1000) * 7); let c = "JETX-M30-" + randomNum + "Z"; o.innerText="Monthly: " + c; }
   window._contactAdmin=()=> { window.open("https://wa.me/+255617496422?text=" + encodeURIComponent("Hi, nimefanya payment, tafadhali nitumie subscription code."), "_blank"); }
 })();
 </script>
